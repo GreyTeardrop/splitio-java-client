@@ -71,6 +71,9 @@ jobs:
 
       - name: SonarQube Scan (Pull Request)
         if: matrix.jdk == '11' && github.event_name == 'pull_request'
+        env:
+          SONARQUBE_HOST_URL: ${{ vars.SONARQUBE_HOST }}
+          SONAR_TOKEN: ${{ secrets.SONARQUBE_TOKEN }}
         run: |
           mvn --batch-mode clean verify sonar:sonar \
             -Dsonar.pullrequest.key=${{ github.event.pull_request.number }} \
