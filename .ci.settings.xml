@@ -25,7 +25,7 @@
             </activation>
             <properties>
               <sonar.projectName>java-client</sonar.projectName>
-              <sonar.host.url>https://sonarqube.split-internal.com</sonar.host.url>
+              <sonar.host.url>${env.SONARQUBE_HOST_URL}</sonar.host.url>
               <sonar.login>${env.SONAR_TOKEN}</sonar.login>
               <sonar.sources>.</sonar.sources>
               <sonar.inclusions>pom.xml,src/main/**</sonar.inclusions>
