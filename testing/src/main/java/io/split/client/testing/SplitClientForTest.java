@@ -10,17 +10,30 @@ import io.split.grammar.Treatments;
 import java.util.*;
 import java.util.concurrent.TimeoutException;
 
+import static java.util.stream.Collectors.toMap;
+
 public class SplitClientForTest implements SplitClient {
     private static final SplitResult CONTROL_RESULT = new SplitResult(Treatments.CONTROL, null);
 
-    private Map<SplitAndKey, SplitResult> _tests;
+    private final Map<SplitAndKey, SplitResult> _tests;
 
     public SplitClientForTest() {
         _tests = new HashMap<>();
     }
 
-    public Map<SplitAndKey, SplitResult> tests() {
-        return _tests;
+    public Map<String, String> tests() {
+        return _tests
+            .entrySet()
+            .stream()
+            .collect(toMap(
+                entry -> entry.getKey().split(),
+                entry -> entry.getValue().treatment(),
+                (existing, replacement) -> existing
+            ));
+    }
+
+    public Map<SplitAndKey, SplitResult> testMappings() {
+        return Collections.unmodifiableMap(_tests);
     }
 
     public void clearTreatments() {
@@ -286,7 +299,7 @@ public class SplitClientForTest implements SplitClient {
     @Override
     public Map<String, SplitResult> getTreatmentsWithConfig(Key key, List<String> featureFlagNames, Map<String, Object> attributes,
                                                             EvaluationOptions evaluationOptions) {
-        return new HashMap<>();
+        return getTreatmentsWithConfig(key.matchingKey(), featureFlagNames);
     }
 
     @Override
